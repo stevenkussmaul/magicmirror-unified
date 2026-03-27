@@ -1,0 +1,18 @@
+services:
+  magicmirror:
+    build:
+      context: .
+    container_name: magicmirror
+    user: "568:568"
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "7890:7890"
+      - "7891:7891"
+      - "6789:6789"
+      - "8907:8907"
+    volumes:
+      - /mnt/your-pool/magicmirror-data/config:/opt/magicmirror/config
+      - /mnt/your-pool/magicmirror-data/modules:/opt/magicmirror/modules
+      - /mnt/your-pool/magicmirror-data/css:/opt/magicmirror/css
+      - /mnt/your-pool/mmpm-data:/home/mmuser/.config/mmpm
