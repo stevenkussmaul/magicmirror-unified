@@ -1,5 +1,5 @@
 # Start with official Node.js Engine
-FROM node:24-bookworm-slim
+FROM --platform=linux/amd64 node:24-bookworm-slim
 
 LABEL maintainer="Steven Kussmaul"
 LABEL org.opencontainers.image.source="https://github.com/stevenkussmaul/magicmirror-unified"
