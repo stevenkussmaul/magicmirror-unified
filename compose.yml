@@ -16,3 +16,8 @@ services:
       - /mnt/your-pool/magicmirror-data/modules:/opt/magicmirror/modules
       - /mnt/your-pool/magicmirror-data/css:/opt/magicmirror/css
       - /mnt/your-pool/magicmirror-data/mmpm-data:/home/apps/.config/mmpm
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

@@ -1,6 +1,11 @@
 # Start with official Node.js Engine
 FROM node:24-bookworm
 
+LABEL maintainer="Steven Kussmaul"
+LABEL org.opencontainers.image.source="https://github.com/stevenkussmaul/magicmirror-unified"
+LABEL org.opencontainers.image.description="Single-container MagicMirror + MMPM deployment managed by PM2, designed for TrueNAS SCALE"
+LABEL org.opencontainers.image.licenses="MIT"
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     python3 \
