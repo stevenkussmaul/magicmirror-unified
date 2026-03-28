@@ -100,17 +100,7 @@ else
 fi
 
 # ------------------------------------------
-# 6. Configure MMPM Docker Flag
-# ------------------------------------------
-if grep -q '"MMPM_IS_DOCKER_IMAGE": true' "$MMPM_ENV"; then
-    echo "[OK] MMPM_IS_DOCKER_IMAGE already set to true."
-else
-    echo "[INIT] Setting MMPM_IS_DOCKER_IMAGE to true..."
-    sed -i -r 's|"MMPM_IS_DOCKER_IMAGE": .*|"MMPM_IS_DOCKER_IMAGE": true,|g' "$MMPM_ENV"
-fi
-
-# ------------------------------------------
-# 7. Configure PM2 Process Name
+# 6. Configure PM2 Process Name
 # ------------------------------------------
 if grep -q '"MMPM_MAGICMIRROR_PM2_PROCESS_NAME": "magicmirror"' "$MMPM_ENV"; then
     echo "[OK] MMPM_MAGICMIRROR_PM2_PROCESS_NAME already set."
@@ -124,7 +114,7 @@ cat "$MMPM_ENV"
 echo ""
 
 # ------------------------------------------
-# 8. Symlink MMPM UI directory for PM2
+# 7. Symlink MMPM UI directory for PM2
 # ------------------------------------------
 # PM2 needs a stable path for the UI static files.
 # Create a symlink so the ecosystem config doesn't
@@ -137,7 +127,7 @@ else
 fi
 
 # ------------------------------------------
-# 9. Start all services via PM2
+# 8. Start all services via PM2
 # ------------------------------------------
 echo "=========================================="
 echo "  All checks passed. Starting services!"

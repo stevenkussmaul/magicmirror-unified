@@ -13,6 +13,8 @@ MMPM's key feature is installing MagicMirror modules, which requires restarting 
 - Automated first-boot initialization of config, modules, and CSS
 - MMM-mmpm module pre-installed and pre-configured
 - Network settings pre-configured for headless/server use
+- Tini as PID 1 for proper signal handling and zombie process reaping
+- Docker healthcheck monitors MagicMirror and MMPM API availability
 - Built on Node.js 24 (Debian Bookworm)
 
 ## Prerequisites
@@ -57,16 +59,12 @@ All services run inside a single container, managed by PM2:
 
 ## Volumes
 
-| TrueNAS Host Path                          | Container Path               |
-|--------------------------------------------|------------------------------|
-| /mnt/your-pool/magicmirror-data/config     | /opt/magicmirror/config      |
-| /mnt/your-pool/magicmirror-data/modules    | /opt/magicmirror/modules     |
-| /mnt/your-pool/magicmirror-data/css        | /opt/magicmirror/css         |
-| /mnt/your-pool/magicmirror-data/mmpm-data  | /home/apps/.config/mmpm      |
-
-## Security Note
-
-The MagicMirror config sets `ipWhitelist: []` to allow connections from any IP. This is required for container networking (the browser connects from outside the container) but means the dashboard is accessible to anyone on your network. Use firewall rules to restrict access if needed.
+| TrueNAS Host Path                        | Container Path               |
+|------------------------------------------|------------------------------|
+| /mnt/your-pool/magicmirror-data/config   | /opt/magicmirror/config      |
+| /mnt/your-pool/magicmirror-data/modules  | /opt/magicmirror/modules     |
+| /mnt/your-pool/magicmirror-data/css      | /opt/magicmirror/css         |
+| /mnt/your-pool/magicmirror-data/mmpm-data | /home/apps/.config/mmpm      |
 
 ## Troubleshooting
 
@@ -85,3 +83,21 @@ Restart MagicMirror manually (e.g., after config changes):
 ```bash
 docker exec magicmirror pm2 restart magicmirror
 ```
+
+## Design Notes
+
+### IP Whitelist
+
+The MagicMirror config sets `ipWhitelist: []` to allow connections from any IP. This is required for container networking (the browser connects from outside the container) but means the dashboard is accessible to anyone on your network. Use firewall rules to restrict access if needed.
+
+### Why `MMPM_IS_DOCKER_IMAGE` Is Set to `false`
+
+MMPM has a config flag `MMPM_IS_DOCKER_IMAGE` intended for multi-container setups where MMPM runs in its own container. When `true`, it blocks CLI commands like `mmpm mm-ctl --restart`, `mmpm mm-ctl --stop`, and `mmpm upgrade` — assuming Docker orchestration handles process management instead.
+
+This project sets it to `false` because our single-container architecture uses PM2, not Docker, to manage processes. Setting it to `false` allows:
+
+- `mmpm mm-ctl --restart` to call `pm2 restart magicmirror` (via the `MMPM_MAGICMIRROR_PM2_PROCESS_NAME` config)
+- Full MMPM CLI access when exec'ing into the container for debugging
+- The MMPM web UI to trigger MagicMirror restarts after module installs
+
+The only downside is that `mmpm upgrade` will run but changes are lost on container rebuild — use `docker compose build` to update MMPM instead.
