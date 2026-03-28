@@ -22,7 +22,7 @@ MMPM's key feature is installing MagicMirror modules, which requires restarting 
   - `/mnt/your-pool/magicmirror-data/config`
   - `/mnt/your-pool/magicmirror-data/modules`
   - `/mnt/your-pool/magicmirror-data/css`
-  - `/mnt/your-pool/mmpm-data`
+  - `/mnt/your-pool/magicmirror-data/mmpm-data`
 
 ## Quick Start
 
@@ -57,12 +57,12 @@ All services run inside a single container, managed by PM2:
 
 ## Volumes
 
-| TrueNAS Host Path                        | Container Path               |
-|------------------------------------------|------------------------------|
-| /mnt/your-pool/magicmirror-data/config   | /opt/magicmirror/config      |
-| /mnt/your-pool/magicmirror-data/modules  | /opt/magicmirror/modules     |
-| /mnt/your-pool/magicmirror-data/css      | /opt/magicmirror/css         |
-| /mnt/your-pool/mmpm-data                 | /home/apps/.config/mmpm      |
+| TrueNAS Host Path                          | Container Path               |
+|--------------------------------------------|------------------------------|
+| /mnt/your-pool/magicmirror-data/config     | /opt/magicmirror/config      |
+| /mnt/your-pool/magicmirror-data/modules    | /opt/magicmirror/modules     |
+| /mnt/your-pool/magicmirror-data/css        | /opt/magicmirror/css         |
+| /mnt/your-pool/magicmirror-data/mmpm-data  | /home/apps/.config/mmpm      |
 
 ## Security Note
 
