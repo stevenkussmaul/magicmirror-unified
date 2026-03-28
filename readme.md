@@ -28,7 +28,7 @@ MMPM's key feature is installing MagicMirror modules, which requires restarting 
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/your-username/magicmirror-unified.git
+   git clone https://github.com/stevenkussmaul/magicmirror-unified.git
    cd magicmirror-unified
    ```
 
