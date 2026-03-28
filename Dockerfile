@@ -1,11 +1,17 @@
 # Start with official Node.js Engine
 FROM node:24-bookworm
 
-# Install Python3 Engine, Pip, and Git
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     git \
+    tini \
+    curl \
+    procps \
+    ca-certificates \
+    nano \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PM2 globally (manages both MagicMirror and MMPM processes)
@@ -64,17 +70,21 @@ COPY ecosystem.config.js /opt/mmpm/ecosystem.config.js
 COPY pm2-scripts/ /opt/mmpm/
 RUN chmod +x /opt/mmpm/*.sh
 
-# Copy the startup script and make it executable
+# Copy the startup and health check scripts
 COPY start.sh /opt/start.sh
-RUN chmod +x /opt/start.sh
+COPY health.sh /opt/health.sh
+RUN chmod +x /opt/start.sh /opt/health.sh
 
 # Transfer ownership of ALL application and staging files to apps user
-RUN chown -R apps:apps $MAGICMIRROR_ROOT /opt/mm_defaults /opt/mmpm /opt/start.sh /home/apps
+RUN chown -R apps:apps $MAGICMIRROR_ROOT /opt/mm_defaults /opt/mmpm /opt/start.sh /opt/health.sh /home/apps
 
 # Drop privileges: Lock the container to apps user
 USER apps:apps
 
 EXPOSE 8080 7890 7891 6789 8907
 
-# Execute the startup script
+HEALTHCHECK --interval=30s --timeout=10s --start-period=90s --retries=3 CMD /opt/health.sh
+
+# Use tini as PID 1 for proper signal handling and zombie reaping
+ENTRYPOINT ["/usr/bin/tini", "--"]
 CMD ["/opt/start.sh"]
