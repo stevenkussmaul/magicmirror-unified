@@ -1,5 +1,8 @@
 # Start with official Node.js Engine
-FROM --platform=$TARGETPLATFORM node:24-bookworm-slim
+FROM node:24-bookworm-slim
+
+ARG TARGETARCH
+RUN [ "$TARGETARCH" = "amd64" ] || (echo "amd64 only" && exit 1)
 
 LABEL maintainer="Steven Kussmaul"
 LABEL org.opencontainers.image.source="https://github.com/stevenkussmaul/magicmirror-unified"
