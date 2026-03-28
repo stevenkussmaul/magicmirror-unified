@@ -1,5 +1,5 @@
 # Start with official Node.js Engine
-FROM node:24-bookworm
+FROM node:24-bookworm-slim
 
 LABEL maintainer="Steven Kussmaul"
 LABEL org.opencontainers.image.source="https://github.com/stevenkussmaul/magicmirror-unified"
@@ -36,29 +36,21 @@ RUN git clone https://github.com/MagicMirrorOrg/MagicMirror . && \
     npm install --no-audit --no-fund
 
 # Create staging directories for the startup script
-RUN mkdir -p /opt/mm_defaults/config \
-             /opt/mm_defaults/css \
-             /opt/mm_defaults/modules
+RUN mkdir -p /opt/mm_staging/config \
+             /opt/mm_staging/css \
+             /opt/mm_staging/modules
 
 # Copy built-in defaults into the staging area
-RUN cp -r $MAGICMIRROR_ROOT/config/* /opt/mm_defaults/config/ && \
-    cp -r $MAGICMIRROR_ROOT/css/* /opt/mm_defaults/css/ && \
-    cp -r $MAGICMIRROR_ROOT/modules/* /opt/mm_defaults/modules/
+RUN cp -r $MAGICMIRROR_ROOT/config/* /opt/mm_staging/config/ && \
+    cp -r $MAGICMIRROR_ROOT/css/* /opt/mm_staging/css/ && \
+    cp -r $MAGICMIRROR_ROOT/modules/* /opt/mm_staging/modules/
 
 # Clone the MMM-mmpm module into staging and install its dependencies
-RUN git clone https://github.com/Bee-Mar/MMM-mmpm.git /opt/mm_defaults/modules/MMM-mmpm && \
-    cd /opt/mm_defaults/modules/MMM-mmpm && npm install --no-audit --no-fund
+RUN git clone https://github.com/Bee-Mar/MMM-mmpm.git /opt/mm_staging/modules/MMM-mmpm && \
+    cd /opt/mm_staging/modules/MMM-mmpm && npm install --no-audit --no-fund
 
-# --- AUTOMATING THE CONFIG.JS SETTINGS ---
-# 1. Update the Address and clear the IP Whitelist
-RUN sed -i 's/address: "localhost"/address: "0.0.0.0"/' /opt/mm_defaults/config/config.js.sample && \
-    sed -i 's/ipWhitelist: \[.*\]/ipWhitelist: \[\]/' /opt/mm_defaults/config/config.js.sample
-
-# 2. Inject the MMM-mmpm module configuration
-RUN printf "        {\n            module: \"MMM-mmpm\",\n            position: \"top_center\"\n        },\n" > /tmp/mmpm_config.txt && \
-    sed -i '/modules: \[/r /tmp/mmpm_config.txt' /opt/mm_defaults/config/config.js.sample && \
-    rm /tmp/mmpm_config.txt
-# ------------------------------------------
+# Copy pre-configured default config (replaces upstream config.js.sample)
+COPY config.js.default /opt/mm_staging/config/config.js.default
 
 # Setup TrueNAS apps user (UID/GID 568)
 RUN groupadd -g 568 apps && \
@@ -81,7 +73,7 @@ COPY health.sh /opt/health.sh
 RUN chmod +x /opt/start.sh /opt/health.sh
 
 # Transfer ownership of ALL application and staging files to apps user
-RUN chown -R apps:apps $MAGICMIRROR_ROOT /opt/mm_defaults /opt/mmpm /opt/start.sh /opt/health.sh /home/apps
+RUN chown -R apps:apps $MAGICMIRROR_ROOT /opt/mm_staging /opt/mmpm /opt/start.sh /opt/health.sh /home/apps
 
 # Drop privileges: Lock the container to apps user
 USER apps:apps

@@ -17,7 +17,7 @@ echo "=========================================="
 # Define paths
 # ------------------------------------------
 MM_ROOT="${MAGICMIRROR_ROOT:-/opt/magicmirror}"
-MM_DEFAULTS="/opt/mm_defaults"
+MM_STAGING="/opt/mm_staging"
 MMPM_CONFIG_DIR="/home/apps/.config/mmpm"
 MMPM_ENV="$MMPM_CONFIG_DIR/mmpm-env.json"
 
@@ -36,8 +36,8 @@ if [ ! -f "$MM_ROOT/config/config.js" ]; then
     echo "[INIT] First boot detected: config.js not found."
     echo "[INIT] Populating config directory from defaults..."
 
-    cp -r "$MM_DEFAULTS"/config/* "$MM_ROOT"/config/
-    cp "$MM_ROOT"/config/config.js.sample "$MM_ROOT"/config/config.js
+    cp -r "$MM_STAGING"/config/* "$MM_ROOT"/config/
+    cp "$MM_ROOT"/config/config.js.default "$MM_ROOT"/config/config.js
 
     echo "[INIT] Config directory initialized!"
 else
@@ -51,7 +51,7 @@ if [ -z "$(ls -A "$MM_ROOT"/css 2>/dev/null)" ]; then
     echo "[INIT] First boot detected: CSS directory is empty."
     echo "[INIT] Populating CSS directory from defaults..."
 
-    cp -r "$MM_DEFAULTS"/css/* "$MM_ROOT"/css/
+    cp -r "$MM_STAGING"/css/* "$MM_ROOT"/css/
 
     echo "[INIT] CSS directory initialized!"
 else
@@ -65,7 +65,7 @@ if [ ! -d "$MM_ROOT/modules/default" ]; then
     echo "[INIT] First boot detected: Default modules not found."
     echo "[INIT] Populating modules directory from defaults..."
 
-    cp -r "$MM_DEFAULTS"/modules/* "$MM_ROOT"/modules/
+    cp -r "$MM_STAGING"/modules/* "$MM_ROOT"/modules/
 
     echo "[INIT] Modules directory initialized!"
 else
@@ -79,7 +79,7 @@ if [ ! -d "$MM_ROOT/modules/MMM-mmpm" ]; then
     echo "[WARN] MMM-mmpm module is missing!"
     echo "[INIT] Restoring MMM-mmpm module from defaults..."
 
-    cp -r "$MM_DEFAULTS"/modules/MMM-mmpm "$MM_ROOT"/modules/MMM-mmpm
+    cp -r "$MM_STAGING"/modules/MMM-mmpm "$MM_ROOT"/modules/MMM-mmpm
 
     echo "[INIT] MMM-mmpm module restored!"
 else

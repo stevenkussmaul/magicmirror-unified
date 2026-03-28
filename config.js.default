@@ -1,0 +1,102 @@
+/* MagicMirror² Config
+ *
+ * Pre-configured for container deployment with MMPM.
+ * Based on the upstream config.js.sample with these changes:
+ *   - address set to "0.0.0.0" (accessible outside container)
+ *   - ipWhitelist set to [] (allow all IPs)
+ *   - MMM-mmpm module added
+ *
+ * For more information see:
+ * https://docs.magicmirror.builders/configuration/introduction.html
+ */
+let config = {
+	address: "0.0.0.0",
+	port: 8080,
+	basePath: "/",
+	ipWhitelist: [],
+
+	useHttps: false,
+	httpsPrivateKey: "",
+	httpsCertificate: "",
+
+	language: "en",
+	locale: "en-US",
+	logLevel: ["INFO", "LOG", "WARN", "ERROR"],
+	timeFormat: 24,
+	units: "metric",
+
+	modules: [
+		{
+			module: "MMM-mmpm",
+		},
+		{
+			module: "alert",
+		},
+		{
+			module: "updatenotification",
+			position: "top_bar"
+		},
+		{
+			module: "clock",
+			position: "top_left"
+		},
+		{
+			module: "calendar",
+			header: "US Holidays",
+			position: "top_left",
+			config: {
+				calendars: [
+					{
+						fetchInterval: 7 * 24 * 60 * 60 * 1000,
+						symbol: "calendar-check",
+						url: "https://ics.calendarlabs.com/76/mm3137/US_Holidays.ics"
+					}
+				]
+			}
+		},
+		{
+			module: "compliments",
+			position: "lower_third"
+		},
+		{
+			module: "weather",
+			position: "top_right",
+			config: {
+				weatherProvider: "openmeteo",
+				type: "current",
+				lat: 40.776676,
+				lon: -73.971321
+			}
+		},
+		{
+			module: "weather",
+			position: "top_right",
+			header: "Weather Forecast",
+			config: {
+				weatherProvider: "openmeteo",
+				type: "forecast",
+				lat: 40.776676,
+				lon: -73.971321
+			}
+		},
+		{
+			module: "newsfeed",
+			position: "bottom_bar",
+			config: {
+				feeds: [
+					{
+						title: "New York Times",
+						url: "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml"
+					}
+				],
+				showSourceTitle: true,
+				showPublishDate: true,
+				broadcastNewsFeeds: true,
+				broadcastNewsUpdates: true
+			}
+		},
+	]
+};
+
+/*************** DO NOT EDIT THE LINE BELOW ***************/
+if (typeof module !== "undefined") { module.exports = config; }
