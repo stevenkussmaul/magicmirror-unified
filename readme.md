@@ -9,7 +9,7 @@ MMPM's key feature is installing MagicMirror modules, which requires restarting 
 ## Features
 - Single container running both MagicMirror and MMPM
 - PM2 manages all processes — MMPM can restart MagicMirror automatically after module installs
-- Runs as unprivileged user (UID 568) — never as root
+- Runs as unprivileged `apps` user (UID/GID 568) — never as root
 - Automated first-boot initialization of config, modules, and CSS
 - MMM-mmpm module pre-installed and pre-configured
 - Network settings pre-configured for headless/server use
@@ -18,7 +18,7 @@ MMPM's key feature is installing MagicMirror modules, which requires restarting 
 ## Prerequisites
 - Docker and Docker Compose installed
 - TrueNAS SCALE (or any Docker-capable host)
-- TrueNAS datasets with UID 568 ownership:
+- TrueNAS datasets with `apps` (UID/GID 568) ownership:
   - `/mnt/your-pool/magicmirror-data/config`
   - `/mnt/your-pool/magicmirror-data/modules`
   - `/mnt/your-pool/magicmirror-data/css`
@@ -62,7 +62,7 @@ All services run inside a single container, managed by PM2:
 | /mnt/your-pool/magicmirror-data/config   | /opt/magicmirror/config      |
 | /mnt/your-pool/magicmirror-data/modules  | /opt/magicmirror/modules     |
 | /mnt/your-pool/magicmirror-data/css      | /opt/magicmirror/css         |
-| /mnt/your-pool/mmpm-data                 | /home/mmuser/.config/mmpm    |
+| /mnt/your-pool/mmpm-data                 | /home/apps/.config/mmpm      |
 
 ## Security Note
 

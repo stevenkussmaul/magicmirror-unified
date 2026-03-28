@@ -49,12 +49,12 @@ RUN printf "        {\n            module: \"MMM-mmpm\",\n            position: 
     rm /tmp/mmpm_config.txt
 # ------------------------------------------
 
-# Setup TrueNAS user 568
-RUN groupadd -g 568 mmgroup && \
-    useradd -u 568 -g 568 -m -s /bin/bash mmuser
+# Setup TrueNAS apps user (UID/GID 568)
+RUN groupadd -g 568 apps && \
+    useradd -u 568 -g 568 -m -s /bin/bash apps
 
 # Create the MMPM config directory
-RUN mkdir -p /home/mmuser/.config/mmpm/log
+RUN mkdir -p /home/apps/.config/mmpm/log
 
 # Copy the default MMPM environment config
 COPY mmpm-env.json /opt/mmpm/mmpm-env.json
@@ -68,11 +68,11 @@ RUN chmod +x /opt/mmpm/*.sh
 COPY start.sh /opt/start.sh
 RUN chmod +x /opt/start.sh
 
-# Transfer ownership of ALL application and staging files to user 568
-RUN chown -R 568:568 $MAGICMIRROR_ROOT /opt/mm_defaults /opt/mmpm /opt/start.sh /home/mmuser
+# Transfer ownership of ALL application and staging files to apps user
+RUN chown -R apps:apps $MAGICMIRROR_ROOT /opt/mm_defaults /opt/mmpm /opt/start.sh /home/apps
 
-# Drop privileges: Lock the container to user 568
-USER 568:568
+# Drop privileges: Lock the container to apps user
+USER apps:apps
 
 EXPOSE 8080 7890 7891 6789 8907
 

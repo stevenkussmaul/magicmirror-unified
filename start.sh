@@ -18,7 +18,7 @@ echo "=========================================="
 # ------------------------------------------
 MM_ROOT="${MAGICMIRROR_ROOT:-/opt/magicmirror}"
 MM_DEFAULTS="/opt/mm_defaults"
-MMPM_CONFIG_DIR="/home/mmuser/.config/mmpm"
+MMPM_CONFIG_DIR="/home/apps/.config/mmpm"
 MMPM_ENV="$MMPM_CONFIG_DIR/mmpm-env.json"
 
 # Locate MMPM's static UI files from the installed package

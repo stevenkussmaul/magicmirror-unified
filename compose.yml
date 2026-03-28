@@ -15,4 +15,4 @@ services:
       - /mnt/your-pool/magicmirror-data/config:/opt/magicmirror/config
       - /mnt/your-pool/magicmirror-data/modules:/opt/magicmirror/modules
       - /mnt/your-pool/magicmirror-data/css:/opt/magicmirror/css
-      - /mnt/your-pool/mmpm-data:/home/mmuser/.config/mmpm
+      - /mnt/your-pool/magicmirror-data/mmpm-data:/home/apps/.config/mmpm
