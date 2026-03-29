@@ -1,0 +1,28 @@
+services:
+  magicmirror:
+    image: skussmaul/magicmirror-unified
+    container_name: magicmirror
+    user: 568:568
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 2
+    ports:
+      - 6030:8080
+      - 6031:7890
+      - 6032:7891
+      - 6033:6789
+      - 6034:8907
+    volumes:
+      - /mnt/apps/configs/magicmirror/config:/opt/magicmirror/config
+      - /mnt/apps/configs/magicmirror/modules:/opt/magicmirror/modules
+      - /mnt/apps/configs/magicmirror/css:/opt/magicmirror/css
+      - /mnt/apps/configs/magicmirror/mmpm:/home/apps/.config/mmpm
+    environment:
+      - TZ=America/New_York
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+networks: {}
