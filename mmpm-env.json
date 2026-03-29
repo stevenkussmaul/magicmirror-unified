@@ -3,5 +3,6 @@
     "MMPM_MAGICMIRROR_URI": "http://localhost:8080",
     "MMPM_MAGICMIRROR_PM2_PROCESS_NAME": "magicmirror",
     "MMPM_IS_DOCKER_IMAGE": false,
-    "MMPM_LOG_LEVEL": "INFO"
+    "MMPM_LOG_LEVEL": "INFO",
+    "MMPM_API_DEBUG_MODE": true
 }
