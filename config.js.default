@@ -28,6 +28,10 @@ let config = {
 	modules: [
 		{
 			module: "MMM-mmpm",
+			config: {
+    			hostname: "localhost", 
+    			port: 7891
+  			}
 		},
 		{
 			module: "alert",
