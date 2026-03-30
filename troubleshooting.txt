@@ -16724,3 +16724,19 @@ M @ zone.js:1092
 V @ zone.js:1122
 z @ zone.js:1153Understand this error
 log-stream-viewer.component.ts:62 Failed to connect to MMPM Log Server 
+
+
+
+root@truenas2126[/home/truenas_admin]# docker port magicmirror
+6789/tcp -> 0.0.0.0:6033
+6789/tcp -> [::]:6033
+7890/tcp -> 0.0.0.0:6031
+7890/tcp -> [::]:6031
+7891/tcp -> 0.0.0.0:6032
+7891/tcp -> [::]:6032
+8080/tcp -> 0.0.0.0:6030
+8080/tcp -> [::]:6030
+8907/tcp -> 0.0.0.0:6034
+8907/tcp -> [::]:6034
+
+
