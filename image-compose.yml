@@ -8,8 +8,8 @@ services:
         condition: on-failure
         max_attempts: 2
     networks:
-      macvlan_mm:
-        ipv4_address: 192.168.54.12
+      macvlan_lan:
+        ipv4_address: 192.168.xxx.xxx
     volumes:
       - /mnt/apps/configs/magicmirror/config:/opt/magicmirror/config
       - /mnt/apps/configs/magicmirror/modules:/opt/magicmirror/modules
@@ -22,13 +22,7 @@ services:
       options:
         max-size: 20m
         max-file: "1"
-
 networks:
-  macvlan_mm:
-    driver: macvlan
-    driver_opts:
-      parent: br1
-    ipam:
-      config:
-        - subnet: 192.168.54.0/24
-          gateway: 192.168.54.1
+  macvlan_lan:
+    external: true
+    name: npm_macvlan_lan
