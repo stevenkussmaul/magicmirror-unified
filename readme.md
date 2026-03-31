@@ -84,6 +84,45 @@ Restart MagicMirror manually (e.g., after config changes):
 docker exec magicmirror pm2 restart magicmirror
 ```
 
+## Networking
+
+This image is deployed using macvlan networking, giving the container its own IP address on the LAN. This is required because MMPM's Angular UI has hardcoded port numbers (7891, 6789, 8907) — the browser constructs API and WebSocket URLs using `window.location.hostname` plus these fixed ports. With bridge networking and remapped host ports, those connections fail. With macvlan, all container ports are directly reachable at the container's LAN IP.
+
+### Accessing the Services
+
+With macvlan, access services directly by container IP — no port remapping:
+
+- **MagicMirror:** `http://192.168.54.12:8080`
+- **MMPM UI:** `http://192.168.54.12:7890`
+
+### Macvlan Network Setup
+
+The `image-compose.yml` defines a self-contained macvlan network (`macvlan_mm`) — no pre-created Docker network or external dependencies required. Update the IP, subnet, gateway, and parent interface to match your environment before deploying.
+
+---
+
+## Future Improvements
+
+### Clean URL Access (no port in URL)
+
+The root cause of the macvlan requirement is that MMPM's Angular UI hardcodes ports 7891, 6789, and 8907 in 3 source files:
+
+- `ui/src/app/services/api/base-api.ts`
+- `ui/src/app/components/log-stream-viewer/log-stream-viewer.component.ts`
+- `ui/src/app/components/magicmirror-controller/magicmirror-controller.component.ts`
+
+The correct fix is to make these ports runtime-configurable via `mmpm-env.json`. The Python backend already reads this file and exposes values to the Angular UI — adding the three port values there allows the UI to use relative URLs when ports are set to `0`, with no rebuild required. Default values remain unchanged so existing Pi/native installs are unaffected.
+
+If this is implemented (either as an upstream PR to `Bee-Mar/mmpm` or as a fork):
+1. Set `MMPM_API_SERVER_PORT`, `MMPM_LOG_SERVER_PORT`, and `MMPM_REPEATER_SERVER_PORT` to `0` in `mmpm-env.json`
+2. Switch `image-compose.yml` back to bridge networking with standard port mappings
+3. Add location blocks to your external reverse proxy to route `/api/*`, `/log-ws/*`, and `/rpt-ws/*` to their respective container ports alongside the main UI proxy
+4. Access both services via clean hostnames with no port required
+
+This would allow `mmpm.yourdomain.com` through a standard reverse proxy with no macvlan required. No nginx inside the container needed.
+
+---
+
 ## Design Notes
 
 ### IP Whitelist

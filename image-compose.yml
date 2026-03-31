@@ -7,12 +7,9 @@ services:
       restart_policy:
         condition: on-failure
         max_attempts: 2
-    ports:
-      - 6030:8080
-      - 6031:7890
-      - 6032:7891
-      - 6033:6789
-      - 6034:8907
+    networks:
+      macvlan_mm:
+        ipv4_address: 192.168.54.12
     volumes:
       - /mnt/apps/configs/magicmirror/config:/opt/magicmirror/config
       - /mnt/apps/configs/magicmirror/modules:/opt/magicmirror/modules
@@ -23,6 +20,15 @@ services:
     logging:
       driver: json-file
       options:
-        max-size: 10m
-        max-file: "3"
-networks: {}
+        max-size: 20m
+        max-file: "1"
+
+networks:
+  macvlan_mm:
+    driver: macvlan
+    driver_opts:
+      parent: br1
+    ipam:
+      config:
+        - subnet: 192.168.54.0/24
+          gateway: 192.168.54.1
